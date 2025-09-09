@@ -1,0 +1,1327 @@
+body {
+  margin: 0;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+.allbox {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: black;
+  overflow: hidden;
+}
+
+/* 팝업 크기 조금 넉넉하게 */
+.popup-content.gallery {
+  max-width: 680px;
+  padding: 18px 18px 20px;
+}
+
+/* 타이틀 라인 + 개수 뱃지 */
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.popup-content.gallery .popup-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #eef1f7;
+  color: #3e4593;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* 타이틀/그리드 경계선(그라데이션) */
+.section-divider {
+  height: 1px;
+  margin: 10px 0 12px;
+  background: linear-gradient(90deg, rgba(0,0,0,.06), rgba(0,0,0,.02) 35%, rgba(0,0,0,0));
+}
+
+/* 반응형 자동 채움 그리드 */
+.gallery-grid.modern {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+/* 썸네일 카드 */
+.gallery-thumb {
+  position: relative;
+  border: none;
+  background: #fff;
+  padding: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+  outline: none;
+}
+
+.gallery-thumb img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4/3;       /* 일정 비율 */
+  object-fit: cover;
+  transform: scale(1.001); /* 자글거림 방지 미세 확대 */
+  transition: transform .25s ease;
+}
+
+/* 돋보기 오버레이 */
+.gallery-thumb::after {
+  content: "🔍";
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  font-size: 18px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+/* 호버/포커스 효과 */
+.gallery-thumb:hover,
+.gallery-thumb:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0,0,0,.12);
+  filter: saturate(1.02);
+}
+
+.gallery-thumb:hover img,
+.gallery-thumb:focus-visible img {
+  transform: scale(1.06);
+}
+
+.gallery-thumb:hover::after,
+.gallery-thumb:focus-visible::after {
+  opacity: .9;
+  transform: translateY(0);
+}
+
+/* 포커스 링 접근성 */
+.gallery-thumb:focus-visible {
+  box-shadow: 0 0 0 3px rgba(62,69,147,.35), 0 10px 22px rgba(0,0,0,.12);
+}
+
+/* 비어있을 때 */
+.gallery-empty {
+  text-align: center;
+  padding: 36px 10px 26px;
+  color: #666;
+  background: #f6f8fb;
+  border: 1px dashed rgba(0,0,0,.1);
+  border-radius: 12px;
+}
+
+
+
+
+
+
+
+
+
+
+/* 방문 후기 팝업 여백 보정 */
+.popup-content.review {
+  position: relative;
+  padding-bottom: 16px;
+}
+
+.review-body {
+  text-align: left;
+  background: #eef1f4;       /* ⬅ 살짝 더 진한 회색 */
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-top: 8px;
+}
+
+/* 주변 가볼만한 곳 섹션 */
+.nearby-wrap {
+  margin-top: 14px;
+}
+
+.nearby-title {
+  font-weight: 800;
+  font-size: 16px;
+  color: #222;
+  margin: 6px 0 8px 0;
+  text-align: left;
+}
+
+/* 2열 그리드는 그대로 두고… */
+.nearby-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+/* 버튼 높이 고정 + 중앙 정렬 */
+.nearby-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  height: 44px;                     /* ⬅ 높이 고정 */
+  padding: 0 12px;                  /* ⬅ 세로 패딩 제거 */
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,.08);
+  background: #f7f8fc;
+  color: #222;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+/* 텍스트 한 줄 + 넘치면 말줄임 */
+.nearby-name {
+  flex: 1;                          /* ⬅ 남는 공간을 텍스트가 차지 */
+  min-width: 0;                     /* ⬅ 말줄임 위해 필요 */
+  white-space: nowrap;              /* ⬅ 줄바꿈 금지 */
+  overflow: hidden;                 /* ⬅ 넘치는 부분 숨김 */
+  text-overflow: ellipsis;          /* ⬅ 말줄임 (…) */
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* ↗ 아이콘은 줄지 않게 */
+.nearby-open {
+  flex: 0 0 auto;
+  margin-left: 6px;
+  opacity: .6;
+}
+
+.nearby-open { opacity: .6; }
+
+
+
+
+
+
+
+
+
+
+
+.topbar {
+  display: flex;
+  position: absolute;
+  width: 100vw;
+  height: 100px;
+  transform: translateY(0px);
+  z-index: 10;
+  transition: transform 0.5s;
+}
+
+.topbar:hover {
+  background: rgba(0, 0, 0, 0.75);
+  transition: background 0.5s, transform 0.5s;
+}
+
+.topbar-box {
+  display: flex;
+  width: 100vw;
+}
+
+.topbar-logo {
+  display: flex;
+  width: 400px;
+  align-items: center;
+  justify-content: left;
+  cursor: pointer;
+}
+
+.logo {
+  font-size: 40px;
+  font-weight: 700;
+  color: white;
+  margin-left: 25px;
+  text-shadow: 3px 3px 2px rgba(0, 0, 0, 1);
+}
+
+.logo2 {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  font-weight: 500;
+  color: white;
+  margin-left: 10px;
+  top: 10px;
+  font-size: 20px;
+  text-shadow: 2px 2px 1px rgba(0, 0, 0, 1);
+}
+
+.topbar-empty {
+  flex: 1;
+  flex-basis: 0;
+}
+
+.topbar-menu {
+  width: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+.menu {
+  display: flex;
+  flex-grow: 1;
+  font-size: 17px;
+  color: white;
+  cursor: pointer;
+  justify-content: center;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+}
+
+.menu:hover {
+  color: yellow;
+}
+
+.menuct {
+  display: flex;
+  position: absolute;
+  width: 30px;
+  height: 35px;
+  left: 25px;
+  top: 105px;
+  z-index: 10;
+  overflow: hidden;
+  transition: transform 0.5s;
+}
+
+.menuctbt {
+  width: 120px;
+  height: 25px;
+  object-fit: cover; /* 원하는 크기로 자동 조정 */
+  object-position: 0px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+  cursor: pointer;
+  animation: floatUpDown 1s infinite alternate ease-in-out;
+}
+
+.menuctbt:hover {
+  object-position: -60px 0px;
+}
+
+@keyframes floatUpDown {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(10px);
+  }
+}
+
+.bottommenu {
+  display: flex;
+  position: absolute;
+  width: 375px;
+  height: 75px;
+  border-radius: 45px;
+  background: rgba(0, 0, 0, 0.5);
+  left: 50%;
+  bottom: 20px;
+  transform: translate(-50%, 0%);
+  z-index: 10;
+  align-items: center;
+  justify-content: center;
+  transition: bottom 0.5s;
+}
+
+.b-menu {
+  display: flex;
+  width: 75px;
+  height: 75px;
+  overflow: hidden;
+  scale: 0.9;
+  transition: scale 0.2s;
+}
+
+.b-menu-h {
+  display: none;
+  position: absolute;
+  width: 75px;
+  height: 75px;
+  overflow: hidden;
+  bottom: 0px;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  transition: scale 0.2s;
+  z-index: 10;
+}
+
+.b-menu-d {
+  display: flex;
+  position: absolute;
+  width: 75px;
+  height: 75px;
+  overflow: hidden;
+  bottom: 0px;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  z-index: 10;
+  opacity: 0; /* 처음에는 투명 */
+  pointer-events: none;
+}
+
+.b-menu1 {
+  width: 750px; /* 원본 크기 유지 */
+  height: 75px;
+  object-fit: cover; /* 원하는 크기로 자동 조정 */
+  object-position: 0px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+  cursor: pointer;
+}
+
+.b-menu2 {
+  width: 750px; /* 원본 크기 유지 */
+  height: 75px;
+  object-fit: cover; /* 원하는 크기로 자동 조정 */
+  object-position: -75px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+  cursor: pointer;
+}
+
+.b-menu3 {
+  width: 750px; /* 원본 크기 유지 */
+  height: 75px;
+  object-fit: cover; /* 원하는 크기로 자동 조정 */
+  object-position: -300px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+  cursor: pointer;
+}
+
+.b-menu4 {
+  width: 750px; /* 원본 크기 유지 */
+  height: 75px;
+  object-fit: cover; /* 원하는 크기로 자동 조정 */
+  object-position: -375px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+  cursor: pointer;
+}
+
+.b-menu5 {
+  width: 750px; /* 원본 크기 유지 */
+  height: 75px;
+  object-fit: cover; /* 원하는 크기로 자동 조정 */
+  object-position: -525px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+  cursor: pointer;
+}
+
+.b-menu6 {
+  width: 750px; /* 원본 크기 유지 */
+  height: 75px;
+  object-fit: cover; /* 원하는 크기로 자동 조정 */
+  object-position: -600px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+  cursor: pointer;
+}
+
+.b-menu7 {
+  width: 750px; /* 원본 크기 유지 */
+  height: 75px;
+  object-fit: cover; /* 원하는 크기로 자동 조정 */
+  object-position: -225px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+  cursor: pointer;
+}
+
+.b-menu8 {
+  width: 750px; /* 원본 크기 유지 */
+  height: 75px;
+  object-fit: cover; /* 원하는 크기로 자동 조정 */
+  object-position: -675px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+  cursor: pointer;
+}
+
+.b-menu:hover {
+  scale: 1;
+  transition: scale 0.2s;
+}
+
+.b-menu1:hover {
+  object-position: -750px 0px;;
+}
+
+.b-menu2:hover {
+  object-position: -825px 0px;;
+}
+
+.b-menu3:hover {
+  object-position: -1050px 0px;;
+}
+
+.b-menu4:hover {
+  object-position: -1125px 0px;;
+}
+
+.b-menu5:hover {
+  object-position: -1275px 0px;;
+}
+
+.b-menu6:hover {
+  object-position: -1350px 0px;;
+}
+
+.b-menu7:hover {
+  object-position: -975px 0px;;
+}
+
+
+.leftmenu {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  left: 0px;
+  top: 50%;
+  transform: translate(0%, -50%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.l-text {
+  display: flex;
+  position: absolute;
+  left: 0;
+  width: 120px;
+  color: white;
+  align-items: center;
+  justify-content: center;
+}
+
+.l-menu {
+  display: flex;
+  position: relative;
+  width: 160px;
+  height: 50px;
+  left: -100px;
+  border-radius: 0px 50px 50px 0px;
+  background: rgba(0, 0, 0, 0.4);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background 0.5s, left 0.5s;
+}
+
+.l-menu:hover {
+  background: rgba(0, 0, 0, 0.8);
+  left: 0px;
+  transition: background 0.5s, left 0.5s;
+}
+
+.l-iconbox {
+  display: flex;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  right: 5px;
+  border-radius: 20px;
+  background: white;
+  overflow: hidden;
+}
+
+.l-icon1 {
+  width: 120px; /* 원본 크기 유지 */
+  height: 40px;
+  object-fit: cover; /* 원하는 크기로 자동 조정 */
+  object-position: 0px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+}
+
+.l-icon2 {
+  width: 120px; /* 원본 크기 유지 */
+  height: 40px;
+  object-fit: cover; /* 원하는 크기로 자동 조정 */
+  object-position: -40px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+}
+
+.l-icon3 {
+  width: 120px; /* 원본 크기 유지 */
+  height: 40px;
+  object-fit: cover; /* 원하는 크기로 자동 조정 */
+  object-position: -80px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+}
+
+.krpano-controls {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 10px;
+  z-index: 1000; /* krpano보다 위에 위치 */
+}
+
+/* 팝업 전체 배경 */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* 팝업 본체 */
+.popup-content {
+  background: white;
+  width: 90%;
+  max-width: 450px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 팝업 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 팝업 닫기 버튼 */
+.popup-close {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 5px;
+  right: 5px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+}
+
+.popup-close:hover {
+  color: #000;
+  border: 2px solid #000
+}
+
+/* 이미지 스타일 */
+.popup-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+/* 타이틀 스타일 */
+.popup-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #222;
+}
+
+/* 정보 텍스트 */
+.popup-text {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+
+
+
+
+.callpopup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.callpopup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.callpopup-content button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  border: none;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+
+
+
+
+.iframe-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.iframe-box {
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.iframe-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: #ff0000;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ✅ 배경 클릭 방지 */
+.no-click {
+  pointer-events: none; /* 배경 클릭 방지 */
+}
+
+/* ✅ 전체 배경 (use.png가 열렸을 때) */
+.use-img-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8); /* 반투명 검정 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  pointer-events: auto; /* 이미지 컨테이너는 클릭 가능 */
+}
+
+/* ✅ 이미지 컨테이너 */
+.use-img-container {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* ✅ 닫기 버튼 */
+.use-img-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: transparent;
+  border: none;
+  width: 45px;
+  height: 45px;
+  font-size: 40px;
+  cursor: pointer;
+  color: #fff;
+  border-radius: 10px;
+  background: #3e4593;
+}
+
+.use-img-close:hover {
+  color: black;
+}
+
+/* ✅ 이미지 스타일 */
+.use-img {
+  width: 600px;
+  height: auto;
+}
+
+
+
+
+.up {
+  transform: translateY(-100px);
+  transition: transform 0.5s;
+}
+
+.close {
+  display: none;
+}
+
+.find {
+  display: flex;
+}
+
+.down-active {
+  bottom: -80px;
+  transition: bottom 0.5s;
+}
+
+.visible {
+  opacity: 1; /* 완전히 나타남 */
+  transition: opacity 0.5s;
+  pointer-events: auto;
+}
+
+.menuctbt2 {
+  object-position: -30px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+}
+
+.menuctbt2:hover {
+  object-position: -90px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+}
+
+
+.b-menu2-1 {
+  object-position: -150px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+}
+
+.b-menu2-1:hover {
+  object-position: -900px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ✅ 팝업 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+
+@media (max-width: 480px) { 
+  /* 모바일에 특화된 스타일 */
+
+  .menuct {
+    display: flex;
+    position: absolute;
+    width: 30px;
+    height: 35px;
+    left: 5px;
+    top: 78px;
+    z-index: 10;
+    overflow: hidden;
+    transform: scale(0.75);
+    transition: transform 0.5s;
+  }
+  
+  .menuctbt {
+    width: 120px;
+    height: 25px;
+    object-fit: cover; /* 원하는 크기로 자동 조정 */
+    object-position: 0px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+    cursor: pointer;
+    animation: floatUpDown 1s infinite alternate ease-in-out;
+  }
+
+  .topbar {
+    display: flex;
+    position: absolute;
+    width: 100vw;
+    height: 75px;
+    transform: translateY(0px);
+    z-index: 10;
+    transition: transform 0.5s;
+  }
+
+  .topbar-logo {
+    display: flex;
+    width: 200px;
+    align-items: center;
+    justify-content: left;
+    cursor: pointer;
+
+  }
+
+  .logo {
+    position: absolute;
+    top: 13px;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    margin-left: 25px;
+    text-shadow: 3px 3px 2px rgba(0, 0, 0, 1);
+  }
+  
+  .logo2 {
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    font-weight: 500;
+    color: white;
+    margin-left: 10px;
+    top: 43px;
+    left: 25px;
+    font-size: 15px;
+    text-shadow: 2px 2px 1px rgba(0, 0, 0, 1);
+  }
+  
+  .topbar-empty {
+    flex: 0;
+    flex-basis: 0;
+  }
+  
+  .topbar-menu {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* ✅ 균등 배치 */
+  }
+  
+  .menu {
+    display: flex;
+    flex-grow: 1;
+    height: 75px;
+    font-size: 10px;
+    color: white;
+    margin-right: 0px;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+  }
+
+
+
+
+  
+
+  .leftmenu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    left: -85px;
+    top: 50%;
+    transform: scale(0.8) translate(50%, -50%);
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .leftmenu .l-menu:nth-of-type(3) {
+    display: none; /* ✅ 세 번째 메뉴 숨김 */
+  }
+
+
+
+
+  .bottommenu {
+    display: flex;
+    position: absolute;
+    width: 375px;
+    height: 75px;
+    border-radius: 45px;
+    background: rgba(0, 0, 0, 0.5);
+    left: 36%;
+    bottom: 0px;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0.7) translate(-50%, 0%);
+    transition: bottom 0.5s;
+  }
+
+  .b-menu-d {
+    display: flex;
+    position: absolute;
+    width: 75px;
+    height: 75px;
+    overflow: hidden;
+    bottom: 0px;
+    left: 47%;
+    transform: scale(0.7) translate(-50%, 0%);
+    z-index: 10;
+    opacity: 0; /* 처음에는 투명 */
+    pointer-events: none;
+  }
+
+  .down-active {
+    bottom: -70px;
+    transition: bottom 0.5s;
+  }
+
+  .visible {
+    opacity: 1; /* 완전히 나타남 */
+    transition: opacity 0.5s;
+    pointer-events: auto;
+  }
+
+
+  /* ✅ 이미지 컨테이너 */
+.use-img-container {
+  position: relative;
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+
+/* ✅ 이미지 스타일 */
+.use-img {
+  width: 300px;
+  height: auto;
+}
+
+.use-img-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: transparent;
+  border: none;
+  width: 30px;
+  height: 30px;
+  font-size: 25px;
+  cursor: pointer;
+  color: #fff;
+  border-radius: 10px;
+  background: #3e4593;
+}
+
+
+.up {
+  transform: translateY(-70px);
+  transition: transform 0.5s;
+}
+
+}
+
+
+
+@media (min-width: 481px) and (max-width: 932px) { 
+  /* 태블릿과 모바일 공용 스타일 */
+
+  .menuct {
+    display: flex;
+    position: absolute;
+    width: 30px;
+    height: 35px;
+    left: 5px;
+    top: 78px;
+    z-index: 10;
+    overflow: hidden;
+    transform: scale(0.75);
+    transition: transform 0.5s;
+  }
+  
+  .menuctbt {
+    width: 120px;
+    height: 25px;
+    object-fit: cover; /* 원하는 크기로 자동 조정 */
+    object-position: 0px 0px; /* 왼쪽 첫 번째 75x75 부분을 사용 */
+    cursor: pointer;
+    animation: floatUpDown 1s infinite alternate ease-in-out;
+  }
+
+
+  .topbar {
+    display: flex;
+    position: absolute;
+    width: 100vw;
+    height: 75px;
+    transform: translateY(0px);
+    z-index: 10;
+    transition: transform 0.5s;
+  }
+
+  .topbar-logo {
+    display: flex;
+    width: 200px;
+    align-items: center;
+    justify-content: left;
+    cursor: pointer;
+
+  }
+
+  .logo {
+    position: absolute;
+    top: 13px;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    margin-left: 25px;
+    text-shadow: 3px 3px 2px rgba(0, 0, 0, 1);
+  }
+  
+  .logo2 {
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    font-weight: 500;
+    color: white;
+    margin-left: 10px;
+    top: 40px;
+    left: 25px;
+    font-size: 15px;
+    text-shadow: 2px 2px 1px rgba(0, 0, 0, 1);
+  }
+  
+  .topbar-empty {
+    flex: 1;
+    flex-basis: 0;
+  }
+  
+  .topbar-menu {
+    width: 290px;
+    display: flex;
+    align-items: center;
+    justify-content: right; /* ✅ 균등 배치 */
+  }
+  
+  .menu {
+    display: flex;
+    width: 130px;
+    height: 75px;
+    font-size: 10px;
+    color: white;
+    margin-right: 0px;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+  }
+
+
+
+
+  
+
+  .leftmenu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    left: -17px;
+    top: 60%;
+    transform: translate(0%, -50%);
+    z-index: 10;
+    pointer-events: none;
+    scale: 0.8;
+  }
+
+  .leftmenu .l-menu:nth-of-type(3) {
+    display: none; /* ✅ 세 번째 메뉴 숨김 */
+  }
+
+
+
+
+
+  .bottommenu {
+    display: flex;
+    position: absolute;
+    width: 375px;
+    height: 75px;
+    border-radius: 45px;
+    background: rgba(0, 0, 0, 0.5);
+    left: -65px;
+    bottom: -10px;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0.6) translate(0%, 0%);
+    transition: bottom 0.5s;
+  }
+
+  .b-menu-d {
+    display: flex;
+    position: absolute;
+    width: 75px;
+    height: 75px;
+    overflow: hidden;
+    bottom: 0px;
+    left: 48.4%;
+    transform: scale(0.6) translate(-50%, 0%);
+    z-index: 10;
+    opacity: 0; /* 처음에는 투명 */
+    pointer-events: none;
+  }
+
+  .down-active {
+    bottom: -70px;
+    transition: bottom 0.5s;
+  }
+
+  .visible {
+    opacity: 1; /* 완전히 나타남 */
+    transition: opacity 0.5s;
+    pointer-events: auto;
+  }
+
+
+
+  /* ✅ 이미지 컨테이너 */
+.use-img-container {
+  position: relative;
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+
+/* ✅ 이미지 스타일 */
+.use-img {
+  width: 300px;
+  height: auto;
+}
+
+.use-img-close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: transparent;
+  border: none;
+  width: 30px;
+  height: 30px;
+  font-size: 25px;
+  cursor: pointer;
+  color: #fff;
+  border-radius: 10px;
+  background: #3e4593;
+}
+
+
+.up {
+  transform: translateY(-75px);
+  transition: transform 0.5s;
+}
+
+
+
+
+
+.popup-overlay {
+  align-items: flex-start;
+  padding-top: 4vh;
+}
+
+/* 팝업 본체 - 가로 모드 */
+.popup-content {
+  width: 80%;
+  max-width: 500px;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 팝업 닫기 버튼 */
+.popup-close {
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  font-size: 18px;
+}
+
+/* 이미지 스타일 - 가로 모드 */
+.popup-image {
+  height: 100px;
+  border-radius: 6px;
+  margin-bottom: -10px;
+}
+
+/* 타이틀 스타일 */
+.popup-title {
+  font-size: 18px;
+  margin-bottom: -5px;
+}
+
+/* 정보 텍스트 */
+.popup-text {
+  font-size: 14px;
+  margin-bottom: -8px;
+}
+
+
+
+}

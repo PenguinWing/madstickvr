@@ -1,0 +1,57 @@
+<krpano>
+
+	<style name="tb_num" type="text" align="lefttop" x="10" width="180"  backgroundcolor="0xffffff" backgroundalpha="0.8" css="data:css_num" html="" enabled="false" border="true" borderwidth="2" bordercolor="0x333333" roundedge="10" padding="10" />
+
+	
+	<data name="css_num">
+		font-family: Helvetica; font-size:12px; color:#333333; text-align:left; line-height:14px;
+	</data>
+	<data name="css_num2">
+		font-family: Helvetica; font-size:10px; color:#333333; text-align:center; line-height:14px;		
+	</data>
+
+	
+	<layer name="num_container" type="container" keep="true" parent="layer[tb_container]" visible="false" bgcolor="0x333333" bgalpha="1" align="lefttop" width="200" height="220" x="0" y="30" > 	
+		<layer name="num1" style="tb_num"  y="20"  height="60"  />
+		<layer name="num2" style="tb_num"  y="90"  height="140" />
+		<layer name="numprint" type="text" bg="false" align="bottom" html="PRESS P TO PRINT" css="data:css_num2" />	
+	</layer>
+	
+
+	<events name="tb_numbers" keep="true" onviewchange="adjusthlookat(0);NumDoView(get(view.hlookat), get(view.vlookat),get(view.fov));NumDoMouse();" onresize="NumDoStage"  />
+
+	
+	<action name="NumDoView" type="Javascript" ><![CDATA[
+		var hl = args[1];
+		var vl = args[2];
+		var fo = args[3];
+
+		var h = hl.toFixed(8);
+		var v = vl.toFixed(8);
+		var f = fo.toFixed(8);
+
+		krpano.call("set(layer[num1].html, Hlookat: " + h + '[br]Vlookat: ' + v + '[br]Fov: ' + f);
+	]]></action>
+
+	
+	<action name="NumDoMouse" >
+		setinterval(time, 0.02,
+			screentosphere(mouse.x, mouse.y, toh, tov);
+			roundval(toh,7);
+			roundval(tov,7);
+			set(layer[num2].html, calc:'Mouse x = ' + mouse.x + '[br]Mouse y = ' + mouse.y + '[br]Mouse ATH = ' + toh + '[br]Mouse ATV = ' + tov + '[br]Stagewidth = ' + stagewidth + '[br]Stageheight = ' + stageheight);
+		);
+	</action>
+
+	<action name="NumDoStage">
+			set(layer[num2].html, calc:'Mouse x = ' + mouse.x + '[br]Mouse y = ' + mouse.y + '[br]Mouse ATH = ' + toh + '[br]Mouse ATV = ' + tov + '[br]Stagewidth = ' + stagewidth + '[br]Stageheight = ' + stageheight);
+	</action>	
+	
+	
+	<action name="NumPrint" >
+				set(_numprint, calc:'&#xA;&#xA;' + 'hlookat="' + view.hlookat + '" vlookat="' + view.vlookat + '" fov="' + view.fov + '"' + '&#xA;' + 'Mouse Stage X= ' + mouse.x + ' -- Mouse Stage Y= ' + mouse.y + ' -- Mouse ATH = ' + toh + ' -- Mouse ATV = ' + tov + '&#xA;' + 'Stage-width = ' + stagewidth + ' px &#xA;' + 'Stage-height = ' + stageheight + ' px');
+			trace(_numprint);		
+			showlog();
+	</action>
+</krpano>
+

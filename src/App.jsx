@@ -233,10 +233,10 @@ document.addEventListener("fullscreenchange", () => {
         <button className="popup-close" onClick={closePopup}>x</button>
         <img src={popupimg} alt="소양강 처녀상" className="popup-image" />
         <h2 className="popup-title">소양강 처녀상</h2>
-        <p className="popup-text">📞 전화번호: <strong>053-763-8009</strong></p>
-        <p className="popup-text">📍 위치: 대구광역시 수성구 동대구로 129</p>
-        <p className="popup-text">🕒 영업시간: <strong>평일 09:00 ~ 20:00</strong></p>
-        <p className="popup-text">주말/공휴일: <strong>09:00 ~ 20:00</strong></p>
+        <p className="popup-text">📞 전화번호: <strong>춘천시 관광안내소 033-250-4312</strong></p>
+        <p className="popup-text">📍 위치: 강원특별자치도 춘천시 영서로 2675 (근화동)</p>
+        <p className="popup-text">🕒 영업시간: <strong>상시 개방</strong></p>
+        <p className="popup-text">주말/공휴일: <strong>연중무휴</strong></p>
       </div>
     </div>
 

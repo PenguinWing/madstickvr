@@ -1,0 +1,285 @@
+﻿<krpano version="1.22" title="Virtual Tour">
+
+	<include url="skin/vtourskin.xml" />
+	<include url="plugins/popups.xml" />
+	<include url="plugins/toolbox/toolbox.xml"/> -->
+
+	<!-- customize skin settings: maps, gyro, webvr, thumbnails, tooltips, layout, design, ... -->
+	<skin_settings maps="false"
+	               maps_type="google"
+	               maps_bing_api_key=""
+	               maps_google_api_key=""
+	               maps_zoombuttons="false"
+	               maps_loadonfirstuse="true"
+	               gyro="true"
+	               gyro_keeplookingdirection="false"
+	               webvr="true"
+	               webvr_keeplookingdirection="true"
+	               webvr_prev_next_hotspots="false"
+	               autotour="false"
+	               littleplanetintro="false"
+	               followmousecontrol="false"
+	               title="true"
+	               thumbs="true"
+	               thumbs_width="120" thumbs_height="80" thumbs_padding="10" thumbs_crop="0|40|240|160"
+	               thumbs_opened="false"
+	               thumbs_text="false"
+	               thumbs_dragging="true"
+	               thumbs_onhoverscrolling="false"
+	               thumbs_scrollbuttons="false"
+	               thumbs_scrollindicator="false"
+	               thumbs_loop="false"
+	               tooltips_buttons="false"
+	               tooltips_thumbs="false"
+	               tooltips_hotspots="false"
+	               tooltips_mapspots="false"
+	               deeplinking="false"
+	               loadscene_flags="MERGE"
+	               loadscene_blend="OPENBLEND(0.5, 0.0, 0.75, 0.05, linear)"
+	               loadscene_blend_prev="SLIDEBLEND(0.5, 180, 0.75, linear)"
+	               loadscene_blend_next="SLIDEBLEND(0.5,   0, 0.75, linear)"
+	               loadingtext=""
+	               layout_width="0%"
+	               layout_maxwidth="814"
+	               controlbar_width="-24"
+	               controlbar_height="40"
+	               controlbar_offset="20"
+	               controlbar_offset_closed="-40"
+	               controlbar_overlap.no-fractionalscaling="10"
+	               controlbar_overlap.fractionalscaling="0"
+	               design_skin_images="vtourskin.png"
+	               design_bgcolor="0x2D3E50"
+	               design_bgalpha="0.8"
+	               design_bgborder="0"
+	               design_bgroundedge="1"
+	               design_bgshadow="0 4 10 0x000000 0.3"
+	               design_thumbborder_bgborder="3 0xFFFFFF 1.0"
+	               design_thumbborder_padding="2"
+	               design_thumbborder_bgroundedge="0"
+	               design_text_css="color:#FFFFFF; font-family:Arial;"
+	               design_text_shadow="1"
+	               />
+
+	<!--
+	    For an alternative skin design either change the <skin_settings> values 
+	    from above or optionally include one of the predefined designs from below.
+	-->
+	<!-- <include url="skin/vtourskin_design_flat_light.xml"  /> -->
+	<!-- <include url="skin/vtourskin_design_glass.xml"       /> -->
+	<!-- <include url="skin/vtourskin_design_ultra_light.xml" /> -->
+	<!-- <include url="skin/vtourskin_design_117.xml"         /> -->
+	<!-- <include url="skin/vtourskin_design_117round.xml"    /> -->
+	<!-- <include url="skin/vtourskin_design_black.xml"       /> -->
+
+
+	<action name="gopano3">
+        loadscene(%1,null,MERGE,OPENBLEND(1.3,0,smooth,,easeInCirc));
+        set(%2);
+        set(%3);
+        set(view.fov, 120);
+        removlayer(pp_blur);
+        removlayer(info_bg);
+    </action>
+
+	<!-- Arrow Compass-->
+       <style name="airhotspot"
+        url="./img/arrow.png"
+        autoalpha="true"
+        crop="0|0|85|120"
+        onovercrop="85|0|85|120"
+        ondowncrop="85|0|85|120"
+        distorted="true"
+        inverserotation="true"
+        edge="bottom"
+        alpha="0.0"
+        visible="false"
+        ox="0" oy="0" d="60"
+        zorder="9"
+        shown="true"
+        vlimit="10"
+        onclick="set(events.onresize, ''); if(linkedscene, loadscene(get(linkedscene),null,MERGE|KEEPVIEW,BLEND(1)); );"
+        onhover="tween(alpha, 1, 0.5, default); showtext(get(scene[get(linkedscene)].title), custom_style);"
+        onover="tween(alpha, 0.1, 0.25);"
+        onout="tween(alpha, 1.0, 0.25);"
+        ondown.touch="onover(); asyncloop(pressed, onhover(); );"
+        onup.touch="onout();"
+        />
+
+    <events name="aircompass" keep="true" onviewchange="
+        if(layer[autoplay_button].state != now
+
+        ,
+            mod(cur_hlookat, get(view.hlookat), 360);
+
+                for (set(i, 0);, i LT hotspot.count, inc(i)
+                ,
+                    if (hotspot[get(i)].st == 'arrow'
+                    ,
+                        if(cur_vlookat LT -10,
+                            set(hotspot[get(i)].alpha, 0);
+                            set(hotspot[get(i)].visible, false);
+                            
+                        );
+
+                        if(cur_vlookat LE 0
+                        ,
+                            add(trans_alpha, cur_vlookat, 10);
+                            div(trans_alpha, 10);
+                            set(hotspot[get(i)].alpha, get(trans_alpha));,
+
+                            set(hotspot[get(i)].alpha, 1);
+                            set(hotspot[get(i)].visible, true);
+                        );
+
+                        if(layer[screenshot_button].state == closed
+                        ,
+                            set(hotspot[get(i)].alpha, 0);
+                            set(hotspot[get(i)].visible, false);
+                        );
+
+                        aircompass_orientate2(get(hotspot[get(i)].name), get(cur_hlookat));
+                    );
+                );
+    )"
+    />  <!-- events -->
+
+	<style name="hotspot" url="./img/hotspot.png" crop="0|0|50|50" edge="center"/>
+	<style name="text" url="plugins/textfield.swf" background="true" bgroundedge="7" bgborder="2px, 0xA9BA3C, 1" align="bottom" y="-15" css="text-align:center; color:#000000; font-family:Monospace; font-weight:bold; font-size:12px;" enabled="false" alpha="0.8"/>
+
+    <action name="aircompass_orientate2">
+        set(cur_hlookat, %2);
+        copy(cur_vlookat, view.vlookat);
+        add(hotspot_north, get(hotspot[%1].north),180);
+        if (hotspot_north GT 360,
+            sub(hotspot_north, 360);
+        );
+
+        sub(rxang, -90, get(cur_vlookat));
+        sub(rzang, get(hotspot_north), get(cur_hlookat));
+
+        set(hotspot[%1].ath,    get(cur_hlookat));
+        set(hotspot[%1].atv, get(cur_vlookat));
+
+        set(hotspot[%1].rx, get(rxang));
+        set(hotspot[%1].rz, get(rzang));
+
+        sub(cur_ox, get(cur_hlookat), get(hotspot_north));
+        mul(cur_ox, Math.PI);
+        div(cur_ox, 180);
+        Math.sin(cur_ox);
+        mul(cur_ox, get(hotspot[%1].d));
+
+        sub(cur_oy, get(cur_hlookat), get(hotspot_north));
+        mul(cur_oy, Math.PI);
+        div(cur_oy, 180);
+        Math.cos(cur_oy);
+        mul(cur_oy, get(hotspot[%1].d));
+
+
+        add(cur_oy, 300); <!-- Added by Min -->
+
+        set(hotspot[%1].ox, get(cur_ox));
+        set(hotspot[%1].oy, get(cur_oy));
+    </action>
+
+
+
+	<action name="do_crop_animation">
+    <!-- add attributes to the hotspot -->
+    registerattribute(xframes, calc((imagewidth / %1) BOR 0));
+    registerattribute(yframes, calc((imageheight / %2) BOR 0));
+    registerattribute(frames, calc(xframes * yframes));
+    registerattribute(frame, 0);
+
+    set(crop, '0|0|%1|%2');
+
+    setinterval(calc('crop_anim_' + name), calc(1.0 / %3),
+        if(loaded,
+            inc(frame);
+            if(frame GE frames, if(onlastframe !== null, onlastframe() ); set(frame,0); );
+            mod(xpos, frame, xframes);
+            div(ypos, frame, xframes);
+            Math.floor(ypos);
+            mul(xpos, %1);
+            mul(ypos, %2);
+            calc(crop, xpos + '|' + ypos + '|%1|%2');
+          ,
+            clearinterval(calc('crop_anim_' + name));
+        );
+    );
+    </action>
+
+	<style name="hotspot_info_bt" alpha="0.5" url="img/info_bt.png" crop="0|0|60|60" framewidth="60" frameheight="60" frame="0" lastframe="1" onloaded="hotspot_animate_x();"
+		onhover="tween(alpha, 1, 0.5, default); showtext(정보보기, custom_style);" onout="tween(alpha, 0.75, 0.5, default);" />
+
+
+	<events name="nadirlogo" keep="true" onviewchange="copy(hotspot[nadirlogo].rotate, view.hlookat);" />
+
+	<scene name="scene_103" title="103" onstart="activatespot(spot3, -110); mapcase1();" thumburl="panos/103.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+		
+		<control bouncinglimits="calc:image.cube ? true : false" />
+
+		<view hlookat="23.5" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/103.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/103.tiles/pano_%s.jpg" />
+		</image>
+
+		<hotspot name="hot1" style="airhotspot" st="arrow" north="23.5"    linkedscene="scene_102"/>
+
+		<hotspot name="nadirlogo" url="./img/downlogo.png" ath="0.000" atv="90.000" zorder="2" distorted="true" scale="0.26" rotate="0.0" rotatewithview="true" enabled="false" />
+
+	</scene>
+
+	
+	<scene name="scene_101" title="101" onstart="activatespot(spot1, -120); mapcase3();" thumburl="panos/101.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+		
+		<control bouncinglimits="calc:image.cube ? true : false" />
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/101.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/101.tiles/pano_%s.jpg" />
+		</image>
+
+		<hotspot name="hot1" style="airhotspot" st="arrow" north="-172"    linkedscene="scene_102"/>
+
+		<hotspot name="nadirlogo" url="./img/downlogo.png" ath="0.000" atv="90.000" zorder="2" distorted="true" scale="0.26" rotate="0.0" rotatewithview="true" enabled="false" />
+
+	</scene>
+
+	<scene name="scene_102" title="102" onstart="activatespot(spot2, -120); mapcase3();" thumburl="panos/102.tiles/thumb.jpg" lat="" lng="" alt="" heading="">
+		
+		<control bouncinglimits="calc:image.cube ? true : false" />
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/102.tiles/preview.jpg" />
+
+		<image prealign="0|0|0">
+			<cube url="panos/102.tiles/pano_%s.jpg" />
+		</image>
+
+		<hotspot name="hot1" style="airhotspot" st="arrow" north="17"    linkedscene="scene_101"/>
+		<hotspot name="hot2" style="airhotspot" st="arrow" north="-177"    linkedscene="scene_103"/>
+
+		<hotspot name="info_01" scale="0.85" style="hotspot_info_bt" ath="-126.461" atv="27.017" onclick="looktohotspot(get(name),90); popup('image', '%CURRENTXML%/img2/1.png'); info_rotate_open();" />
+
+		<hotspot name="nadirlogo" url="./img/downlogo.png" ath="0.000" atv="90.000" zorder="2" distorted="true" scale="0.26" rotate="0.0" rotatewithview="true" enabled="false" />
+
+	</scene>
+
+
+
+
+	<krpano devices="mobile|android|iphone" >
+
+
+	</krpano>
+
+
+</krpano>

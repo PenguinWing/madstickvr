@@ -952,6 +952,18 @@ div {
 @media (max-width: 480px) { 
   /* 모바일에 특화된 스타일 */
 
+  /* 텍스트 한 줄 + 넘치면 말줄임 */
+  .nearby-name {
+    flex: 1;                          /* ⬅ 남는 공간을 텍스트가 차지 */
+    min-width: 0;                     /* ⬅ 말줄임 위해 필요 */
+    white-space: nowrap;              /* ⬅ 줄바꿈 금지 */
+    overflow: hidden;                 /* ⬅ 넘치는 부분 숨김 */
+    text-overflow: ellipsis;          /* ⬅ 말줄임 (…) */
+    font-size: 12px;
+    line-height: 1;
+    margin-top: 5px;
+  }
+
   .info-row {
     grid-template-columns: 24px 90px 1fr;
     padding: 8px 10px;

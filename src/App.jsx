@@ -233,10 +233,33 @@ document.addEventListener("fullscreenchange", () => {
         <button className="popup-close" onClick={closePopup}>x</button>
         <img src={popupimg} alt="소양강 처녀상" className="popup-image" />
         <h2 className="popup-title">소양강 처녀상</h2>
-        <p className="popup-text">📞 전화번호: <strong>춘천시 관광안내소 033-250-4312</strong></p>
-        <p className="popup-text">📍 위치: 강원특별자치도 춘천시 영서로 2675 (근화동)</p>
-        <p className="popup-text">🕒 영업시간: <strong>상시 개방</strong></p>
-        <p className="popup-text">주말/공휴일: <strong>연중무휴</strong></p>
+        <ul className="info-list">
+          <li className="info-row">
+            <span className="info-ico">📞</span>
+            <span className="info-key">전화번호</span>
+            <span className="info-val">
+              <a href="tel:0332504312">033-250-4312</a>
+            </span>
+          </li>
+
+          <li className="info-row">
+            <span className="info-ico">📍</span>
+            <span className="info-key">위치</span>
+            <span className="info-val">강원특별자치도<br></br>춘천시 영서로 2675 (근화동)</span>
+          </li>
+
+          <li className="info-row">
+            <span className="info-ico">🕒</span>
+            <span className="info-key">영업시간</span>
+            <span className="info-val"><b>상시 개방</b></span>
+          </li>
+
+          <li className="info-row">
+            <span className="info-ico">📅</span>
+            <span className="info-key">주말/공휴일</span>
+            <span className="info-val"><b>연중무휴</b></span>
+          </li>
+        </ul>
       </div>
     </div>
 

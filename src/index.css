@@ -17,6 +17,57 @@ div {
   overflow: hidden;
 }
 
+
+/* ---------- 정보 섹션 3열 그리드 ---------- */
+.info-list {
+  list-style: none;
+  margin: 10px 0 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;              /* 각 행 간격 */
+}
+
+.info-row {
+  display: grid;
+  grid-template-columns: 28px 110px 1fr; /* 아이콘 / 항목명 / 상세내용 */
+  align-items: start;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(100,180,255,0.12);
+}
+
+.info-ico {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #9fd0ff;
+  filter: drop-shadow(0 0 6px rgba(100,180,255,.25));
+}
+
+.info-key {
+  color: #cfe9ff;
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+
+.info-val {
+  color: #eaf6ff;
+  word-break: keep-all;
+  line-height: 1.5;
+}
+
+.info-val a {
+  color: #bfe2ff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.info-val b { color: #ffffff; }
+
 /* 팝업 크기 조금 넉넉하게 */
 .popup-content.gallery {
   max-width: 680px;
@@ -29,6 +80,8 @@ div {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  margin-right: 50px;
+  margin-top: -2px;
 }
 
 .popup-content.gallery .popup-title {
@@ -59,34 +112,27 @@ div {
   background: linear-gradient(90deg, rgba(0,0,0,.06), rgba(0,0,0,.02) 35%, rgba(0,0,0,0));
 }
 
-/* 반응형 자동 채움 그리드 */
+/* ✅ 사진 보기 그리드 */
 .gallery-grid.modern {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 12px;
 }
-
-/* 썸네일 카드 */
 .gallery-thumb {
-  position: relative;
-  border: none;
-  background: #fff;
-  padding: 0;
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
+  position: relative;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0,0,0,.06);
-  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
-  outline: none;
+  transition: transform 0.25s, box-shadow 0.25s;
 }
-
 .gallery-thumb img {
-  display: block;
   width: 100%;
-  aspect-ratio: 4/3;       /* 일정 비율 */
+  height: 100%;
   object-fit: cover;
-  transform: scale(1.001); /* 자글거림 방지 미세 확대 */
-  transition: transform .25s ease;
+}
+.gallery-thumb:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(100, 180, 255, 0.4);
 }
 
 /* 돋보기 오버레이 */
@@ -99,14 +145,6 @@ div {
   opacity: 0;
   transform: translateY(6px);
   transition: opacity .18s ease, transform .18s ease;
-}
-
-/* 호버/포커스 효과 */
-.gallery-thumb:hover,
-.gallery-thumb:focus-visible {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(0,0,0,.12);
-  filter: saturate(1.02);
 }
 
 .gallery-thumb:hover img,
@@ -150,13 +188,15 @@ div {
   padding-bottom: 16px;
 }
 
+/* ✅ 방문 후기 박스 */
 .review-body {
-  text-align: left;
-  background: #eef1f4;       /* ⬅ 살짝 더 진한 회색 */
-  border: 1px solid rgba(0,0,0,.06);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(100, 180, 255, 0.25);
   border-radius: 12px;
   padding: 14px 16px;
   margin-top: 8px;
+  font-size: 14px;
+  color: #d6f1ff;
 }
 
 /* 주변 가볼만한 곳 섹션 */
@@ -179,21 +219,22 @@ div {
   gap: 8px;
 }
 
-/* 버튼 높이 고정 + 중앙 정렬 */
+/* ✅ 주변 장소 버튼 */
 .nearby-btn {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  width: 100%;
-  height: 44px;                     /* ⬅ 높이 고정 */
-  padding: 0 12px;                  /* ⬅ 세로 패딩 제거 */
-  border-radius: 10px;
-  border: 1px solid rgba(0,0,0,.08);
-  background: #f7f8fc;
-  color: #222;
+  background: rgba(50, 100, 160, 0.25);
+  border: 1px solid rgba(100, 180, 255, 0.3);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #eaf6ff;
   cursor: pointer;
-  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+  display: flex;
+  justify-content: space-between;
+  transition: background 0.2s, transform 0.2s;
+}
+.nearby-btn:hover {
+  background: rgba(100, 180, 255, 0.3);
+  transform: translateY(-2px);
 }
 
 /* 텍스트 한 줄 + 넘치면 말줄임 */
@@ -575,88 +616,87 @@ div {
   z-index: 1000; /* krpano보다 위에 위치 */
 }
 
-/* 팝업 전체 배경 */
+/* ✅ 공통 팝업 베이스 */
 .popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  background: rgba(10, 10, 25, 0.6); /* 더 어두운 반투명 배경 */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 2000;
+  backdrop-filter: blur(6px); /* VR 느낌의 블러 */
 }
 
-/* 팝업 본체 */
 .popup-content {
-  background: white;
-  width: 90%;
-  max-width: 450px;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-  text-align: center;
   position: relative;
-  animation: fadeIn 0.3s ease-in-out;
+  background: rgba(20, 20, 40, 0.85); /* 반투명 카드 */
+  border: 1px solid rgba(100, 180, 255, 0.4); /* 네온 블루 라인 */
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 480px;
+  width: 90%;
+  color: #eaf6ff;
+  box-shadow: 0 0 25px rgba(50, 200, 255, 0.4);
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  animation: popupFade 0.35s ease-out;
 }
 
-/* 팝업 애니메이션 */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+/* 애니메이션 */
+@keyframes popupFade {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* 팝업 닫기 버튼 */
+/* ✅ 닫기 버튼 */
 .popup-close {
   position: absolute;
-  width: 30px;
-  height: 30px;
-  top: 5px;
-  right: 5px;
-  background: transparent;
-  border: none;
-  font-size: 20px;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: 2px solid rgba(100, 180, 255, 0.7);
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  color: #64b4ff;
+  font-size: 18px;
   cursor: pointer;
-  color: rgba(0, 0, 0, 0.5);
-  border: 2px solid rgba(0, 0, 0, 0.5);
-  border-radius: 10px;
+  transition: all 0.2s;
 }
-
 .popup-close:hover {
-  color: #000;
-  border: 2px solid #000
+  background: rgba(100, 180, 255, 0.2);
+  color: #fff;
 }
 
-/* 이미지 스타일 */
+/* ✅ 제목 */
+.popup-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  text-align: left;
+  border-left: 4px solid #64b4ff;
+  padding-left: 10px;
+  color: #ffffff;
+}
+
+/* ✅ 본문 텍스트 */
+.popup-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #cfe9ff;
+  margin: 6px 0;
+}
+
+/* ✅ 이미지 */
 .popup-image {
   width: 100%;
-  height: 200px;
+  border-radius: 12px;
+  margin-bottom: 16px;
   object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-
-/* 타이틀 스타일 */
-.popup-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #222;
-}
-
-/* 정보 텍스트 */
-.popup-text {
-  font-size: 16px;
-  color: #555;
-  margin-bottom: 5px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
 
 
@@ -848,7 +888,47 @@ div {
 
 
 
+/* =============== Lightbox (갤러리 이미지 확대) =============== */
+/* 갤러리 목록 팝업보다 위에 오도록 z-index를 더 크게 */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 25, 0.7);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000; /* popup-overlay(2000)보다 큼 */
+  animation: popupFade 0.35s ease-out;
+}
 
+.lightbox-content {
+  position: relative;
+  max-width: 92vw;
+  max-height: 88vh;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(20, 20, 40, 0.85);
+  border: 1px solid rgba(100, 180, 255, 0.4);
+  box-shadow: 0 0 25px rgba(50, 200, 255, 0.4);
+}
+
+.lightbox-image {
+  display: block;
+  max-width: 90vw;
+  max-height: 80vh;
+  border-radius: 12px;
+  object-fit: contain;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.45);
+}
+
+/* 닫기 버튼은 기존 디자인을 재사용 (위치만 라이트박스 컨테이너 기준) */
+.lightbox-content .popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+}
 
 
 
@@ -871,6 +951,13 @@ div {
 
 @media (max-width: 480px) { 
   /* 모바일에 특화된 스타일 */
+
+  .info-row {
+    grid-template-columns: 24px 90px 1fr;
+    padding: 8px 10px;
+  }
+  .info-key { font-size: 14px; }
+  .info-val { font-size: 14px; }
 
   .menuct {
     display: flex;

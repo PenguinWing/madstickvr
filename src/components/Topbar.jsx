@@ -28,6 +28,24 @@ const Topbar = ({
 
   const reloadPage = () => window.location.reload();
 
+
+    const openLightbox = (src) => {
+      setLightboxSrc(src);
+      setLightboxOpen(true);
+    };
+
+    const closeLightbox = () => {
+      setLightboxOpen(false);
+      setLightboxSrc(null);
+    };
+
+    // ESC로 닫기
+    useEffect(() => {
+      const onKey = (e) => { if (e.key === "Escape") closeLightbox(); };
+      window.addEventListener("keydown", onKey);
+      return () => window.removeEventListener("keydown", onKey);
+    }, []);
+
   // 장소 소개 텍스트
   const PLACE_TITLE = "소양강 처녀상";
   const PLACE_DESC = `
@@ -72,18 +90,6 @@ VR 촬영 포인트도 많고, 스카이워크랑 연계해서 1~2시간 정도 
   // 갤러리 팝업
   const openGallery = () => setGalleryOpen(true);
   const closeGallery = () => setGalleryOpen(false);
-
-  // 라이트박스
-  const openLightbox = (src) => {
-    setLightboxSrc(src);
-    setLightboxOpen(true);
-    document.body.classList.add("no-click");
-  };
-  const closeLightbox = useCallback(() => {
-    setLightboxOpen(false);
-    setLightboxSrc(null);
-    document.body.classList.remove("no-click");
-  }, []);
 
   // 방문 후기 팝업
   const openReview = () => {
@@ -191,15 +197,14 @@ VR 촬영 포인트도 많고, 스카이워크랑 연계해서 1~2시간 정도 
   </div>
 )}
 
-      {/* ===== 라이트박스 ===== */}
       {lightboxOpen && (
-        <div className="use-img-overlay" onClick={closeLightbox}>
-          <div className="use-img-container" onClick={(e) => e.stopPropagation()}>
-            <button className="use-img-close" onClick={closeLightbox}>×</button>
-            <img className="use-img" src={lightboxSrc} alt="확대 이미지" />
-          </div>
-        </div>
-      )}
+  <div className="lightbox-overlay" onClick={closeLightbox}>
+    <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+      <button className="popup-close" onClick={closeLightbox}>×</button>
+      <img src={lightboxSrc} alt="확대 이미지" className="lightbox-image" />
+    </div>
+  </div>
+)}
 
       {/* ===== 방문 후기 팝업 ===== */}
       {reviewOpen && (

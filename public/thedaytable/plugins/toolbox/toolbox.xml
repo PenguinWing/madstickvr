@@ -1,0 +1,178 @@
+﻿<krpano>
+	<include url="distortedhotspot_editor.xml" />
+	<include url="polygonalhotspot_editor.xml" />
+	<include url="numbers.xml" />
+	<include url="scrollingtext.xml" />
+	
+	<toolbox
+			 align="lefttop"
+			 x="10"
+			 y="100"
+			 css="font-family:Helvetica;font-size:12px;color:0xffffff;text-align:center;"
+			 css2="font-family:Helvetica;font-size:10px;color:0xffffff;text-align:center;"
+			 css3="font-family:Helvetica;font-size:14px;color:0xffffff;text-align:left;"	
+			 
+			 
+	/>		 
+
+	<!-- press T to	show the toolbox -->
+	<events name="tb_keys" keep="true" onkeydown="ToolboxKeys();" />
+	<action name="ToolboxKeys" >
+		<!-- trace(get(keycode)); -->
+		if(keycode == 84, ShowToolbox(layer[tb_container].alpha));
+		if(keycode == 80, ToolboxPrint());
+		if(keycode == 72, ToolboxHelp());		
+	</action>	
+	<!-- styles -->
+	<style name="tb_chap" type="text" align="top" width="-20" height="30" bgcolor="0x666666" bgroundedge="4" vcenter="true" css="get:toolbox.css2" onover="set(bgcolor,0x336699);" onout="set(bgcolor,0x666666);" /> 
+
+
+
+	<layer name="tb_container" keep="true" type="container" autoalpha="true" alpha="0" align="get:toolbox.align" x="get:toolbox.x" y="get:toolbox.y" bgcolor="0x333333" bgalpha="1" width="200" height="190" bgroundedge="4" bgcapture="true" ondown="tb_draglayer();"	>
+		<layer name="tb_tit" type="text" enabled="false" align="top" y="10" bg="false" vcenter="true" html="KRPANO TOOLBOX" css="get:toolbox.css" onclick="ToolBoxHome" />
+		<layer name="tb_logovt" type="text" align="righttop" width="20" height="20" x="10" y="8" bgcolor="0x336699" bgalpha="1" bgroundedge="10" html="TUUR" vcenter="true" css="font-family:Helvetica;color:#ffffff;font-size:6px;" onclick="openurl(http://www.virtualtuur.com,_blank);" onloaded="trace('&#xA;&#xA; Simple Free Krpano ToolBox © by Virtual Tuur &#xA; Press T to show / hide. &#xA;You can drag the ToolBox')" />
+		<layer name="tb_dhe" style="tb_chap" y="50" html="DISTORTED HOTSPOT EDITOR" onclick="ToolSelect(dhe);" />
+		<layer name="tb_phe" style="tb_chap" y="90" html="POLYGONAL HOTSPOT EDITOR" onclick="ToolSelect(phe);" />
+		<layer name="tb_numbers" style="tb_chap" y="130" html="NUMBERS" onclick="ToolSelect(num);"/>
+		
+		<layer name="tb_dragstrip1" type="text" align="bottom" y="6" bg="false" vcenter="true" html="you can drag me" css="get:toolbox.css2" alpha="0.4" enabled="false" />
+
+		<layer name="tb_help" type="text" align="rightbottom" x="10" y="6" bg="false" vcenter="true" html="?" css="get:toolbox.css2" alpha="0.4" onclick="ToolboxHelp" />
+	</layer>	
+
+	<action name="ShowToolbox" >
+		if(%1 == 0, tween(%1,1);, tween(%1,0));
+	</action>
+
+	
+	<action name="ToolSelect" >
+		for(set(i,0), i LT layer.count, inc(i),
+			if(layer[get(i)].style == tb_chap, set(layer[get(i)].visible, false));
+		);
+		set(_tb, %1);
+		if(%1 == 'dhe', callwith(layer[tb_container], tween(width|height, 405|346,,,set(layer[dhe_toolbox].visible, true))));
+		if(%1 == 'phe', callwith(layer[tb_container], tween(width|height, 200|240,,,set(layer[phe_box].visible, true))));
+		if(%1 == 'num', callwith(layer[tb_container], tween(width|height, 200|290,,,set(layer[num_container].visible, true))));
+		set(layer[tb_tit].enabled,true);
+	</action>
+	
+	
+	<action name="ToolBoxHome" >
+		if(_tb == 'dhe', DheResetAllExit();set(layer[dhe_toolbox].visible, false));
+		if(_tb == 'phe', PheExit();set(layer[phe_box].visible, false));
+		if(_tb == 'num', set(layer[num_container].visible, false));
+		
+		callwith(layer[tb_container], tween(width|height, 200|190,,,
+			for(set(i,0), i LT layer.count, inc(i),
+				if(layer[get(i)].style == tb_chap, set(layer[get(i)].visible, true));
+			);
+			set(layer[tb_tit].enabled,false);
+			set(_tb, null);
+		));
+		
+	</action>
+
+	<action name="tb_draglayer" >
+		copy(drag_currentx, x);
+		copy(drag_currenty, y);
+		copy(drag_stagex, mouse.stagex);
+		copy(drag_stagey, mouse.stagey);
+		indexoftxt(align_contains_right, get(align), 'right');
+		indexoftxt(align_contains_bottom, get(align), 'bottom');
+		calc(drag_align_x, align_contains_right GE 0 ? -1 : +1);
+		calc(drag_align_y, align_contains_bottom GE 0 ? -1 : +1);
+		asyncloop(pressed,
+			calc(x, drag_currentx + (mouse.stagex - drag_stagex)*drag_align_x);
+			calc(y, drag_currenty + (mouse.stagey - drag_stagey)*drag_align_y);
+		  );
+	</action>
+	
+	<action name="ToolboxPrint" >
+
+		if(_tb == 'num', 
+			NumPrint();
+		);
+		
+		if(_tb == 'phe',
+			PhePrint();
+		);
+
+		if(_tb == 'dhe',
+			DhePrintCode();
+		);
+		showlog();
+	</action>	
+	
+	<!-- HELP SECTION -->
+	<layer name="tb_help_container" type="text" keep="true" align="center" width="80%" bgcolor="0x333333" autoheight="true" autoalpha="true" alpha="0"  padding="20" html="data:html_tb_help" css="get:toolbox.css3" />
+	
+	<action name="ToolboxHelp" scope="private:toolbox">
+		ifnot(tb_helpscroll,
+			set(tb_helpscroll, true);
+			ScrollingTextfieldLayer();
+		,
+			removelayer(stf_bg, true);
+			set(tb_helpscroll, false);
+		);
+	</action>	
+	
+	<data name="html_tb_help">
+		<font size="+1px">Welcome to this Free Simple Krpano ToolBox.</font>
+		[br][br]
+		Put the toolbox FOLDER on the same level as the 'tour.xml' in your project. Include the toolbox.xml in your tour.xml like:
+		[br]
+		&#60;include url="toolbox/toolbox.xml" /&#62;
+		[br][br]
+		Now load your project. Press T on your keyboard to show/hide the ToolBox. 
+		[br]
+		The toolBox is dragable!! 
+		[br]
+		To show/hide this help, you can press H on your keyboard or click on the small question sign at the right bottom in the ToolBox.
+		[br][br]
+		Currently these 3 tools are available:
+		[br]
+		[li] Distorted Hotspot Editor [/li]
+		[li] Polygonal Hotspot Editor [/li]
+		[li] Numbers [/li]
+		
+		[br][br][br]
+		<font size="+1px">The Distorted Hotspot Editor</font>
+		[br][br]
+		
+		With this tool you will be able to distort your distorted hotspots. Of course it also works with non-distorted hotspots. In that case just use the ATH and ATV.
+		[br]
+		Find the scene or pano where the hotspot you'll like to edit is. Then click on the 'DISTORTED HOTSPOT EDITOR' button in the ToolBox. Click 'START DISTORTED HOTSPOT EDITOR' and start dragging the desired hospot. With the 'tune' or 'fine tune' buttons you can do all your x-y-z-scale distortions. All buttons have a seperate reset. The 'Reset All' button will sett all values to 0, and scale to original scale as defined in your hotspot code.
+		[br]
+		When done and satisfied, editting this hotspot, click 'Print', or press P. In the log you will find all relevant code. Copy/paste it in the source code of your project.
+		[br]
+		If you like to go on ... press the top button, 'STOP DISTORTED HOTSPOT EDITOR' or click the 'Krpano ToolBox' top title to go back to the ToolBox index and stop the 'Distorted Hotspot Editor' and find your way in your project to a next hotspot to distort or to use another tool. Of course you can press T to hide the ToolBox at any time, but i would advise to stop this editor first!
+		
+		[br][br][br]
+		<font size="+1px">The Polygonal Hotspot Editor</font>
+		[br][br]
+		Click the 'START NEW HOTSPOT' button and start drawing your Polygonal hotspot by clicking. When done press space. You can press P or click the 'SHOW CODE' button to get the relevant code, OR, just press 'START NEW HOTSPOT' again and make a new one. In this case, when fully finished, press P and it will show all your polygonal drawings.
+		
+		[br][br][br]
+		<font size="+1px">Numbers</font>
+		[br][br]
+		This will show you some relevant numbers. In case of needing the mouse position or so... press P to print all current numbers.
+		
+		[br][br][br]
+		NOTE:
+		[br]
+		In the ToolBox there is a scrolling textfield for this help page. The scrollarea.js is in this 'toolbox' folder as well. (version 1.19pr14). You can change it there when problems occure or point it to 'your own' scrollarea.js. Find it in the scrollingtext.xml at line 70. 
+		[br]
+		The code is made with some of the latest code options (krpano version 1.19pr14). It might be that it is not backwards compatible with older versions.
+		[br][br]
+		This is a Share-Ware product  <a href="http://www.virtualtuur.com" target="_blank" style="color:#55BDE0;" > © by Virtual Tuur</a>. 
+		[br]
+		Please use it and i hope it brings some convenience. If you find a problem or a bug, please let me know. <a href="mailto:virtualtuur@gmail.com" target="_self" style="color:#55BDE0;" >EMAIL</a> 
+		[br]
+		PayPal donations are welcome!
+		[br][br]
+		Enjoy!
+		[br][br]
+		<font size="+2px">;-&#41;</font>
+		
+	</data>
+</krpano>
